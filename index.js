@@ -51,7 +51,7 @@ async function run() {
         const { searchTerm, category, brand, minPrice, maxPrice, sort, page = 1, limit = 8 } = req.query;
     
         const query = {};
-    
+    // console.log("maxp: ",maxPrice, " Minp: ", minPrice);
         if (searchTerm) {
           query.ProductName = { $regex: searchTerm, $options: 'i' };
         }
@@ -64,7 +64,7 @@ async function run() {
         if (minPrice && maxPrice) {
           query.Price = { $gte: parseFloat(minPrice), $lte: parseFloat(maxPrice) };
         }
-    
+    console.log(query);
         let sortQuery = {};
         if (sort === 'priceLowToHigh') {
           sortQuery.Price = 1;
