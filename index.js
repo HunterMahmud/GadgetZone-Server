@@ -33,15 +33,65 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
-    const newsLetterCollection = client.db("gymDB").collection("newsletter");
+    const productCollection = client.db("gadgetDB").collection("products");
+
+    //----------------------------------------------------
+    //----------------------------------------------------
+
+    // app.get("/products", async (req, res) => {
+    //   try {
+    //     const result = await productCollection.find({}).toArray();
+    //     res.send(result);
+    //   } catch (err) {
+    //     res.status(500).send({ message: "internal Server Error" });
+    //   }
+    // });
+    app.get('/products', async (req, res) => {
+      try {
+        const { searchTerm, category, brand, minPrice, maxPrice, sort, page = 1, limit = 8 } = req.query;
     
-
-    //----------------------------------------------------
-    //----------------------------------------------------
-
-
-  
-
+        const query = {};
+    
+        if (searchTerm) {
+          query.ProductName = { $regex: searchTerm, $options: 'i' };
+        }
+        if (category) {
+          query.Category = category;
+        }
+        if (brand) {
+          query.Brand = brand;
+        }
+        if (minPrice && maxPrice) {
+          query.Price = { $gte: parseFloat(minPrice), $lte: parseFloat(maxPrice) };
+        }
+    
+        let sortQuery = {};
+        if (sort === 'priceLowToHigh') {
+          sortQuery.Price = 1;
+        } else if (sort === 'priceHighToLow') {
+          sortQuery.Price = -1;
+        } else if (sort === 'newestFirst') {
+          sortQuery.CreationDate = -1;
+        }
+    
+        const options = {
+          sort: sortQuery,
+          skip: (page - 1) * limit,
+          limit: parseInt(limit),
+        };
+    
+        const products = await productCollection.find(query, options).toArray();
+        const totalProducts = await productCollection.countDocuments(query);
+    
+        res.send({
+          products,
+          totalPages: Math.ceil(totalProducts / limit),
+          currentPage: parseInt(page),
+        });
+      } catch (err) {
+        res.status(500).send({ message: "Internal Server Error" });
+      }
+    });
     // await client.db("admin").command({ ping: 1 });
     // console.log(
     //   "Pinged your deployment. You successfully connected to MongoDB!"
