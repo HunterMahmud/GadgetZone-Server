@@ -114,7 +114,14 @@ async function run() {
         res.status(500).send({ message: "Internal Server Error" });
       }
     });
-
+    app.get("/brands", async (req, res) => {
+      try {
+        const brands = await productCollection.distinct("Brand");
+        res.send(brands);
+      } catch (err) {
+        res.status(500).send({ message: "Internal Server Error" });
+      }
+    });
     // await client.db("admin").command({ ping: 1 });
     // console.log(
     //   "Pinged your deployment. You successfully connected to MongoDB!"
