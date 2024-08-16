@@ -26,7 +26,7 @@ const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster
 const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
-    strict: true,
+    // strict: true,
     deprecationErrors: true,
   },
 });
@@ -38,14 +38,7 @@ async function run() {
     //----------------------------------------------------
     //----------------------------------------------------
 
-    // app.get("/products", async (req, res) => {
-    //   try {
-    //     const result = await productCollection.find({}).toArray();
-    //     res.send(result);
-    //   } catch (err) {
-    //     res.status(500).send({ message: "internal Server Error" });
-    //   }
-    // });
+   
     app.get("/products", async (req, res) => {
       try {
         const {
@@ -76,7 +69,7 @@ async function run() {
             $lte: parseFloat(maxPrice),
           };
         }
-        console.log(query);
+        // console.log(query);
         let sortQuery = {};
         if (sort === "priceLowToHigh") {
           sortQuery.Price = 1;
@@ -109,8 +102,10 @@ async function run() {
     app.get("/categories", async (req, res) => {
       try {
         const categories = await productCollection.distinct("Category");
+        console.log(categories);
         res.send(categories);
       } catch (err) {
+        console.log(err);
         res.status(500).send({ message: "Internal Server Error" });
       }
     });
