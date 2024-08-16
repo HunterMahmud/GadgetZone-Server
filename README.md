@@ -1,12 +1,12 @@
 # GadgetZone Server
 
-**Visit the live site:** [ThriveFit](link will be here).
+**Visit the live site:** [GadgetZone](https://gadgetzone-1.web.app/).
 
-[Client Side Repository](https://github.com/HunterMahmud/repo)
+[Client Side Repository](https://github.com/HunterMahmud/GadgetZone-Client)
 
 ## Description
 
-This is the server-side code for the GadgetZone application. It is built with Node.js, Express, and MongoDB, and uses JSON Web Tokens (JWT) for authentication.
+This is the server-side code for the GadgetZone application. It is built with Node.js, Express, and MongoDB.
 
 ## Prerequisites
 
@@ -18,7 +18,7 @@ This is the server-side code for the GadgetZone application. It is built with No
 1. **Clone the repository**:
 
    ```sh
-   git clone https://github.com/HunterMahmud/repo.git
+   git clone https://github.com/HunterMahmud/GadgetZone-Server.git
    cd gadgetzone-server
    ```
 
