@@ -10,8 +10,8 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-    //   "",
-    //   "",
+      //   "",
+      //   "",
       //other links will be here
     ],
     credentials: true,
@@ -46,14 +46,23 @@ async function run() {
     //     res.status(500).send({ message: "internal Server Error" });
     //   }
     // });
-    app.get('/products', async (req, res) => {
+    app.get("/products", async (req, res) => {
       try {
-        const { searchTerm, category, brand, minPrice, maxPrice, sort, page = 1, limit = 8 } = req.query;
-    
+        const {
+          searchTerm,
+          category,
+          brand,
+          minPrice,
+          maxPrice,
+          sort,
+          page = 1,
+          limit = 8,
+        } = req.query;
+
         const query = {};
-    // console.log("maxp: ",maxPrice, " Minp: ", minPrice);
+        // console.log("maxp: ",maxPrice, " Minp: ", minPrice);
         if (searchTerm) {
-          query.ProductName = { $regex: searchTerm, $options: 'i' };
+          query.ProductName = { $regex: searchTerm, $options: "i" };
         }
         if (category) {
           query.Category = category;
@@ -62,27 +71,30 @@ async function run() {
           query.Brand = brand;
         }
         if (minPrice && maxPrice) {
-          query.Price = { $gte: parseFloat(minPrice), $lte: parseFloat(maxPrice) };
+          query.Price = {
+            $gte: parseFloat(minPrice),
+            $lte: parseFloat(maxPrice),
+          };
         }
-    console.log(query);
+        console.log(query);
         let sortQuery = {};
-        if (sort === 'priceLowToHigh') {
+        if (sort === "priceLowToHigh") {
           sortQuery.Price = 1;
-        } else if (sort === 'priceHighToLow') {
+        } else if (sort === "priceHighToLow") {
           sortQuery.Price = -1;
-        } else if (sort === 'newestFirst') {
+        } else if (sort === "newestFirst") {
           sortQuery.CreationDate = -1;
         }
-    
+
         const options = {
           sort: sortQuery,
           skip: (page - 1) * limit,
           limit: parseInt(limit),
         };
-    
+
         const products = await productCollection.find(query, options).toArray();
         const totalProducts = await productCollection.countDocuments(query);
-    
+
         res.send({
           products,
           totalPages: Math.ceil(totalProducts / limit),
@@ -92,6 +104,17 @@ async function run() {
         res.status(500).send({ message: "Internal Server Error" });
       }
     });
+    // Assuming you already have a MongoDB collection for products
+
+    app.get("/categories", async (req, res) => {
+      try {
+        const categories = await productCollection.distinct("Category");
+        res.send(categories);
+      } catch (err) {
+        res.status(500).send({ message: "Internal Server Error" });
+      }
+    });
+
     // await client.db("admin").command({ ping: 1 });
     // console.log(
     //   "Pinged your deployment. You successfully connected to MongoDB!"
