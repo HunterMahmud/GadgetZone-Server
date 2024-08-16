@@ -1,4 +1,4 @@
-const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
+const { MongoClient, ServerApiVersion } = require("mongodb");
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
@@ -10,9 +10,8 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      //   "",
-      //   "",
-      //other links will be here
+      "https://gadgetzone-1.web.app",
+      "https://gadgetzone-1.firebaseapp.com",
     ],
     credentials: true,
   })
@@ -38,7 +37,6 @@ async function run() {
     //----------------------------------------------------
     //----------------------------------------------------
 
-   
     app.get("/products", async (req, res) => {
       try {
         const {
@@ -97,18 +95,18 @@ async function run() {
         res.status(500).send({ message: "Internal Server Error" });
       }
     });
-    // Assuming you already have a MongoDB collection for products
-
+    // getting category distinct name
     app.get("/categories", async (req, res) => {
       try {
         const categories = await productCollection.distinct("Category");
-        console.log(categories);
+        // console.log(categories);
         res.send(categories);
       } catch (err) {
         console.log(err);
         res.status(500).send({ message: "Internal Server Error" });
       }
     });
+    //getting brands distinct name
     app.get("/brands", async (req, res) => {
       try {
         const brands = await productCollection.distinct("Brand");
