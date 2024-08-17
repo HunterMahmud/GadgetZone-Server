@@ -9,7 +9,7 @@ const app = express();
 app.use(
   cors({
     origin: [
-      "http://localhost:5173",
+      // "http://localhost:5173",
       "https://gadgetzone-1.web.app",
       "https://gadgetzone-1.firebaseapp.com",
     ],
@@ -74,7 +74,7 @@ async function run() {
         } else if (sort === "priceHighToLow") {
           sortQuery.Price = -1;
         } else if (sort === "newestFirst") {
-          sortQuery.CreationDate = -1;
+          sortQuery.ProductCreationDateTime = -1;
         }
 
         const options = {
